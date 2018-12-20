@@ -1,0 +1,120 @@
+options:
+    base: &base
+        dotfileDirectory: dotfiles
+
+    binPackage:
+        directoryName: bin
+        links:
+            - bin: .bin
+
+    comptonPackage:
+        directoryName: compton
+        links:
+            - config: .config/compton.conf
+
+    conkyPackage:
+        directoryName: conky
+        links:
+            - exemplum: .config/conky/exemplum
+            - photophraphy: .config/conky/photophraphy
+            - popup: .config/conky/popup
+            - prompt: .config/conky/prompt
+            - reflection: .config/conky/reflection
+            - tersus: .config/conky/tersus
+            - welcome: .config/conky/welcome
+            - wip: .config/conky/WIP
+
+    dunstPackage:
+        directoryName: dunst
+        links:
+            - dunstrc: .config/dunst/dunstrc
+
+    firefoxPackage:
+        directoryName: firefox
+        links:
+            - userChrome: .mozilla/firefox/xmffpcc7.default/chrome/userChrome.css
+
+    gtkPackage:
+        directoryName: gtk
+        links:
+            - mnml: .themes/mnml
+            - fantome: .themes/Fantome
+            - Krayons: .themes/Krayons
+            - OneDark: .themes/OneDark
+            - Faint_Dark: .themes/Faint_Dark
+            - .gtkrc-2.0: .gtkrc-2.0
+            - settings.ini: .config/gtk-3.0/settings.ini
+            - gtk.css: .config/gtk-3.0/gtk.css
+            - .profile: .profile
+
+    mpdPackage:
+        directoryName: mpd
+        links:
+            - config: .mpd/mpd.conf
+
+    ncmpcppPackage:
+        directoryName: ncmpcpp
+        links:
+            - config-aurora: .ncmpcpp/config-aurora
+            - config-griseo: .ncmpcpp/config-griseo
+            - config-hana: .ncmpcpp/config-hana
+
+    neovimPackage:
+        directoryName: neovim
+        links:
+            - init: .config/nvim/init.vim
+
+    obmenu-generatorPackage:
+        directoryName: obmenu-generator
+        links:
+            - config: .config/obmenu-generator/config.pl
+            - schema: .config/obmenu-generator/schema.pl
+
+    obthemesPackage:
+        directoryName: obthemes
+        links:
+            - circulus: .themes/Circulus
+            - subtle: .themes/Subtle
+            - tricky: .themes/Tricky
+            - whitey: .themes/Whitey
+            - Krayons: .themes/Krayons
+            - OneDark: .themes/OneDark
+            - Faint_Dark: .themes/Faint_Dark
+
+    openboxPackage:
+        directoryName: openbox
+        links:
+            - autostart: .config/openbox/autostart
+            - menu: .config/openbox/menu.xml
+            - rc: .config/openbox/rc.xml
+
+    rofiPackage:
+        directoryName: rofi
+        links:
+            - krayons.rasi: .config/rofi/krayons.rasi
+
+    termitePackage:
+        directoryName: termite
+        links:
+            - config: .config/termite/config
+
+    tint2Package:
+        directoryName: tint2
+        links:
+            - tint2rc: .config/tint2/tint2rc
+
+    urxvtPackage:
+        directoryName: urxvt
+        links:
+            - xresources: .Xresources
+            - xrdb: .xrdb
+
+    wallpaperPackage:
+        directoryName: wallpaper
+        links:
+            - wallpaper: .wallpaper
+
+    zshPackage:
+        directoryName: zsh
+        links:
+            - zshrc: .zshrc

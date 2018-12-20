@@ -1,0 +1,221 @@
+#!/bin/bash
+#
+# Nota: Markdown Note Management
+set -e
+YEAR=10
+
+classes=()
+years=()
+notes=()
+
+read -r -d '\0' message << EOF
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <title>Plasma's Notes</title>
+  <link rel="icon" type="image/png" href="https://u.teknik.io/aL524.png">
+</head>
+<body> 
+\0
+EOF
+
+# Get usage information
+#
+# Effects:
+#     Print out help information.
+usage() {
+cat << EOF
+USAGE:
+        
+    nota [year|"all"] (class)
+    
+EXAMPLES:
+    
+    nota 
+        - Compiles notes for this year and all classes
+    nota all
+        - Compiles all notes
+    nota 10
+        - Compiles notes for 10th year
+    nota 1 APComputerScience
+        - Compiles notes for Year 1, AP Comp. Sci
+EOF
+}
+
+# Get the names of all of the classes within a year
+#
+# Args:
+#     $1 - Year
+#
+# Effects:
+#     Adds all of the class names to the classes array
+#
+getclassnames() {
+    for file in $HOME/Notes/"Year$1"/*; do
+        if [[ -d $file ]]; then
+            classes+=($(basename "$file"))
+        fi
+    done
+}
+
+# Get the names of all of the years
+#
+# Effects:
+#     Adds all of the year names to the years array
+#
+getyearnames() {
+    for file in $HOME/Notes/*; do
+        if [[ -f $file ]]; then
+            years+=("$PWD/$file")
+        fi
+    done
+}
+
+# Gets the notes in a specified directory
+#
+# Effects:
+#     Adds all of the files in the directory to the notes array
+#
+getnotes() {
+    for file in $(ls $1); do
+        if [[ "$file" == *.md ]]; then
+            notes+=("$file")
+        fi
+    done
+}
+
+# Converts markdown files into a conglemerate .pdf file
+#
+# Args:
+#     $1 - Name of file to output to
+#     $2 - Set of markdown files to compile together
+#
+# Effects:
+#     Creates a .pdf file with contents pulled from the markdown files and
+#     informs the user.
+#
+makepdf() {
+    pandoc -V geometry:margin=1in -H "$HOME/Notes/fonts.tex" --toc \
+        --pdf-engine=xelatex -o "$1.pdf" "$HOME/Notes/about.md" $2
+    echo "Created $1.pdf"
+}
+
+makehtml() {
+    pandoc --webtex -o "$1.html" "$HOME/Notes/about.md" $2
+    echo "Created $1.html"
+}
+
+
+# Converts notes into a .pdf file with makepdf(1)
+#
+# Args:
+#     $1 - Year of notes to make
+#     $2 - Class of notes to make
+#
+# Effects:
+#     Compiles all of the notes within a specified class of a specified year
+#     into a pdf for each class and year. Wildcards *are* permitted and used
+#     when compiling all years or all classes within a year.
+#
+#     e.g.
+#         `makepdf "2018" "Biology"`
+#         would create a file named `$NOTES/Year2018/ClassBiology/Biology.pdf`
+#         contains all of the notes within `$NOTES/Year2018/ClassBiology`. As
+#         well as creating a file named `$NOTES/Year2018/2018.pdf` that contains
+#         all of the notes from `$NOTES/Year2018/*/`.
+# 
+makenotes() {
+    for year in $HOME/Notes/Year$1; do
+        for class in $year/Class$2; do
+            cd "$class"
+            getnotes "$class"
+            output_file="$class/"$(basename "$class")
+
+            makepdf "$output_file" "${notes[*]}" &
+            makehtml "$output_file" "${notes[*]}" &
+            
+            wait 
+            unset notes output_file
+            cd - &>/dev/null
+        done
+        cd "$year"
+        echo "Compiling Year $year's PDF"
+        gs -sDEVICE=pdfwrite \
+            -dQUIET \
+            -o "$(basename $year).pdf" \
+            Class*/*.pdf
+        echo "Created ${year}.pdf"
+    done
+
+    mv $(find -name "*.html") "$HOME/Notes/docs"
+
+    echo "[Notes] Applying CSS"
+
+    cd "$HOME/Notes/"
+    for file in ~/Notes/docs/*.html; do
+        if [[ $(tail -n 1 $file) == "</body>" ]]; then
+            continue
+        fi
+        echo "</body>" >> $file
+        mv $file temp
+        echo "$message">$file
+        cat temp>>$file
+        rm temp
+    done
+
+    echo "[Notes] CSS Applied"
+}
+
+# Interpet arguments
+#
+# Args:
+#     $1 - Year or general set of notes to compile
+#     $2 - Specific class to compile
+#
+# Effects:
+#     Runs argument specified commands.
+#
+main() {
+    case "$1" in
+        "all")
+            echo "[Notes] Compiling All Notes"
+            makenotes "*" "*"
+            echo "[Notes] Finished Compiling All Notes"
+            exit 0
+            ;;
+        '')
+            echo "[Notes] Compiling Year ${YEAR} Notes"
+            makenotes "${YEAR}" "*"
+            echo "[Notes] Finished Compiling Year ${YEAR}"
+            exit 0
+            ;;
+        [0-9]*)
+            if [[ "$2" == '' ]]; then
+                echo "[Notes] Compiling Year $1 Notes"
+                makenotes "$1" "*"
+                echo "[Notes] Finished Compiling Year $1"
+            else
+                getclassnames "$1"
+                found=false
+                for class in "${classes[@]}"; do
+                    if [[ "${class}" == "Class$2" ]]; then
+                        found=true
+                        break
+                    fi
+                done
+                if [[ "$found" = false ]]; then
+                    echo "[Notes] Invalid Class Name For Year $1"
+                    exit 1
+                fi
+                makenotes "$1" "$2"
+                echo "[Notes] Finished Compiling Year $1 - $2"
+                exit 0
+            fi
+            ;;
+        *)
+            usage
+            exit 1
+            ;;
+    esac
+}
+
+main "$1" "$2"

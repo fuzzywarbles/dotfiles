@@ -1,0 +1,25 @@
+# Settings
+music_directory "/home/plasma/.music/"
+playlist_directory "/home/plasma/.music/"
+db_file "/home/plasma/.mpd/mpd.db"
+log_file "/home/plasma/.mpd/mpd.log"
+pid_file "/home/plasma/.mpd/mpd.pid"
+state_file "/home/plasma/.mpd/mpdstate"
+
+# Audio Output
+audio_output {
+    type "pulse"
+    name "pulse audio"
+}
+
+# Visualizer
+audio_output {
+    type                    "fifo"
+    name                    "my_fifo"
+    path                    "/tmp/mpd.fifo"
+    format                  "44100:16:2"
+}
+
+# Connections
+bind_to_address "127.0.0.1"
+port "6600"

@@ -1,0 +1,38 @@
+#include </home/fuzzy/.xrdb/onedark>
+
+! Colors  
+*background:   bg  
+*foreground:   fg  
+*color0:      blk  
+*color8:      bblk  
+*color1:      red  
+*color9:      bred  
+*color2:      grn  
+*color10:     bgrn  
+*color3:      ylw  
+*color11:     bylw  
+*color4:      blu  
+*color12:     bblu  
+*color5:      mag  
+*color13:     bmag  
+*color6:      cyn  
+*color14:     bcyn  
+*color7:      wht  
+*color15:     bwht  
+
+! Settings
+URxvt.scrollBar:       false
+URxvt.internalBorder:  50
+URxvt.letterSpace:     0
+URxvt.lineSpace:       0
+
+! XFT Font Settings
+Xft.antialias: 1
+Xft.autohint: 0
+Xft.lcdfilter: lcddefault
+Xft.hintstyle: hintslight
+Xft.rgba: rgb
+Xft.dpi: 96
+
+! Font
+URxvt.font: xft:Hack:size=10

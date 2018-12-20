@@ -1,0 +1,35 @@
+# Autostart
+# Background
+#hsetroot -fill .wallpaper/mountainFourEdited.jpg
+feh --bg-fill .wallpaper/Hexagon_Krayons.png
+
+# Internet
+sudo NetworkManager &
+
+# Xresources
+xrdb -merge .Xresources &
+
+# Shadows
+compton &
+
+# Panel
+tint2 &
+#xfce4-panel &
+
+# Wifi
+#nm-applet &
+
+# Clipboard
+#clipit &
+
+# Bluetooth
+#blueman-applet &
+
+# Battery
+#cbatticon &
+
+# Volume
+#volumeicon &
+
+# Redshift
+#redshift-gtk &
